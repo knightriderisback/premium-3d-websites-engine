@@ -6,6 +6,7 @@ VIDEO_PATH="${2:-}"
 OUT_DIR="./dist-${NICHE}"
 
 mkdir -p "$OUT_DIR/frames"
+mkdir -p "./${NICHE}/frames"
 
 HAS_FRAMES="false"
 FRAME_COUNT=120
@@ -288,4 +289,5 @@ cat << HTML > "$OUT_DIR/index.html"
 </html>
 HTML
 
-echo "[✓] Built $OUT_DIR"
+cp "$OUT_DIR/index.html" "./${NICHE}/index.html"
+echo "[✓] Built $OUT_DIR and ./${NICHE}"
