@@ -12,10 +12,11 @@ HAS_FRAMES="false"
 FRAME_COUNT=120
 
 if [[ -n "$VIDEO_PATH" && -f "$VIDEO_PATH" ]] && command -v ffmpeg >/dev/null 2>&1; then
-  ffmpeg -y -i "$VIDEO_PATH" -vf "fps=24,scale=1280:-1:flags=lanczos" -vframes 120 -q:v 80 "$OUT_DIR/frames/frame_%04d.webp" >/dev/null 2>&1
+  ffmpeg -y -i "$VIDEO_PATH" -vf "fps=24,scale=720:960:flags=lanczos" -vframes 120 -c:v libwebp -q:v 80 "$OUT_DIR/frames/frame_%04d.webp" >/dev/null 2>&1
   FRAME_COUNT=$(ls -1 "$OUT_DIR/frames"/frame_*.webp 2>/dev/null | wc -l)
   if [ "$FRAME_COUNT" -gt 0 ]; then
     HAS_FRAMES="true"
+    cp -r "$OUT_DIR/frames"/* "./${NICHE}/frames/" 2>/dev/null || true
   fi
 fi
 
