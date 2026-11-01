@@ -2,9 +2,6 @@
   "name": "premium-3d-websites-engine",
   "version": "1.0.0",
   "description": "High-End 3D Scrollytelling Website Engine & Flagship Demos (Coffee, Burger, Camera)",
-  "scripts": {
-    "build": "echo 'Static build ready'"
-  },
   "keywords": [
     "3d-scrollytelling",
     "webgl",
