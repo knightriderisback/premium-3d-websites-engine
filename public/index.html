@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3D Forge Engine — High-End 3D Scrollytelling Websites</title>
+  <meta name="description" content="Generate bespoke 60FPS Apple-grade interactive 3D scrollytelling websites from any video or procedural core. Powered by WebGL, GSAP, and AI Concierge." />
+  
+  <!-- CDNs -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg: #060508;
+      --accent-gold: #d97706;
+      --accent-orange: #ff5500;
+      --accent-cyan: #00e5ff;
+    }
+    body {
+      background-color: var(--bg);
+      color: #f5f5f4;
+      font-family: 'Space Grotesk', sans-serif;
+      overflow-x: hidden;
+    }
+    h1, h2, h3, .font-display {
+      font-family: 'Syne', sans-serif;
+    }
+    code, pre, .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .glass {
+      background: rgba(18, 16, 22, 0.65);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card {
+      background: rgba(22, 20, 28, 0.5);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+    }
+    #hero-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .content-layer {
+      position: relative;
+      z-index: 10;
+    }
+    .text-gradient {
+      background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .glow-gold { text-shadow: 0 0 30px rgba(217, 119, 6, 0.5); }
+    .glow-orange { text-shadow: 0 0 30px rgba(255, 85, 0, 0.5); }
+    .glow-cyan { text-shadow: 0 0 30px rgba(0, 229, 255, 0.5); }
+  </style>
+</head>
+<body class="selection:bg-amber-500 selection:text-black">
+  <canvas id="hero-canvas"></canvas>
+
+  <!-- Sticky Luxury Navigation -->
+  <header class="fixed top-0 left-0 w-full z-50 px-6 py-4 flex justify-between items-center glass border-b border-white/5">
+    <div class="flex items-center gap-3">
+      <div class="relative flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 via-orange-500 to-cyan-500 p-[1px]">
+        <div class="w-full h-full bg-[#060508] rounded-lg flex items-center justify-center">
+          <span class="font-display font-black text-xs text-white">3D</span>
+        </div>
+      </div>
+      <div>
+        <div class="font-display font-black tracking-wider text-base text-white">3D FORGE ENGINE</div>
+        <div class="text-[10px] font-mono text-stone-400 tracking-wider">AWARDS-TIER SCROLLYTELLING</div>
+      </div>
+    </div>
+
+    <div class="hidden md:flex items-center gap-6 text-xs font-mono tracking-wider">
+      <a href="#demos" class="text-stone-400 hover:text-white transition">FLAGSHIPS</a>
+      <a href="#live-preview" class="text-stone-400 hover:text-white transition">STUDIO PREVIEW</a>
+      <a href="#cli" class="text-stone-400 hover:text-white transition">CLI ENGINE</a>
+      <a href="#specs" class="text-stone-400 hover:text-white transition">FEATURES</a>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <a href="https://github.com/knightriderisback/premium-3d-websites-engine" target="_blank" rel="noopener noreferrer" class="px-3.5 py-1.5 rounded-full text-xs font-mono text-stone-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 transition flex items-center gap-2">
+        <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        <span>GitHub</span>
+      </a>
+      <a href="#demos" class="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-white text-black hover:bg-stone-200 transition">
+        Launch Demos ↓
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="content-layer pt-32 pb-20 px-6 max-w-7xl mx-auto">
+    <div class="flex flex-col items-center text-center pt-8 md:pt-16 pb-16">
+      <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full glass border border-white/10 mb-8">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="text-xs font-mono tracking-widest text-stone-300 uppercase">ENGINE V2.0 • 60FPS SCROLLYTELLING READY</span>
+      </div>
+
+      <h1 class="text-5xl sm:text-7xl lg:text-9xl font-extrabold tracking-tight leading-[0.95] max-w-6xl mb-8">
+        THE ART OF <br />
+        <span class="bg-gradient-to-r from-amber-400 via-orange-500 to-cyan-400 bg-clip-text text-transparent">3D SCROLLYTELLING</span>
+      </h1>
+
+      <p class="text-stone-400 text-lg sm:text-xl max-w-3xl leading-relaxed mb-10">
+        Turn raw video sequences or procedural kinetic cores into jaw-dropping, Apple-grade 3D interactive web experiences. Complete with hardware scrub, glassmorphism UI, and built-in AI Voice Concierge.
+      </p>
+
+      <div class="flex flex-wrap items-center justify-center gap-4 text-xs font-mono">
+        <a href="#demos" class="px-8 py-4 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-black font-bold uppercase tracking-wider hover:opacity-90 transition shadow-lg shadow-orange-500/20">
+          Explore The 3 Flagships →
+        </a>
+        <a href="#cli" class="px-8 py-4 rounded-full glass hover:bg-white/10 text-white font-medium border border-white/15 transition flex items-center gap-2">
+          <span>$</span> ./3d-forge.sh CLI Docs
+        </a>
+      </div>
+
+      <!-- Live metrics readout banner -->
+      <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-4xl text-left">
+        <div class="glass p-4 rounded-xl border border-white/5">
+          <div class="text-[11px] font-mono text-stone-500 uppercase">Kinetic Framerate</div>
+          <div class="text-2xl font-extrabold font-display text-white mt-1">60 FPS</div>
+          <div class="text-[10px] font-mono text-emerald-400 mt-0.5">Hardware Scrubbing</div>
+        </div>
+        <div class="glass p-4 rounded-xl border border-white/5">
+          <div class="text-[11px] font-mono text-stone-500 uppercase">AI Speech Engine</div>
+          <div class="text-2xl font-extrabold font-display text-white mt-1">Realtime</div>
+          <div class="text-[10px] font-mono text-cyan-400 mt-0.5">Web Speech Synthesis</div>
+        </div>
+        <div class="glass p-4 rounded-xl border border-white/5">
+          <div class="text-[11px] font-mono text-stone-500 uppercase">Video Pipeline</div>
+          <div class="text-2xl font-extrabold font-display text-white mt-1">Lanczos 4K</div>
+          <div class="text-[10px] font-mono text-amber-400 mt-0.5">FFmpeg Auto-WebP</div>
+        </div>
+        <div class="glass p-4 rounded-xl border border-white/5">
+          <div class="text-[11px] font-mono text-stone-500 uppercase">Deployment</div>
+          <div class="text-2xl font-extrabold font-display text-white mt-1">Zero-Config</div>
+          <div class="text-[10px] font-mono text-orange-400 mt-0.5">Vercel Edge Ready</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flagship Showcase Grid -->
+    <section id="demos" class="pt-24 pb-16">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+        <div>
+          <p class="text-xs font-mono tracking-[0.3em] uppercase text-amber-400 mb-2">// 01. FLAGSHIP EXPERIENCES</p>
+          <h2 class="text-4xl md:text-6xl font-extrabold tracking-tight">CRAFTED FOR LUXURY NICHES</h2>
+        </div>
+        <p class="text-stone-400 max-w-md text-sm mt-4 md:mt-0 font-mono">
+          Each flagship is completely responsive, voice-synthesized, and scrubbed at sub-pixel precision.
+        </p>
+      </div>
+
+      <div class="grid lg:grid-cols-3 gap-8">
+        <!-- DEMO 1: COFFEE -->
+        <div class="glass-card rounded-3xl p-8 flex flex-col justify-between relative overflow-hidden group border border-amber-500/20">
+          <div class="absolute -top-24 -right-24 w-56 h-56 bg-amber-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-amber-500/20 transition duration-500"></div>
+          <div>
+            <div class="flex items-center justify-between mb-6">
+              <span class="text-xs font-mono px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400">NICHE: ROASTERY</span>
+              <span class="text-xs font-mono text-stone-400">214°C FIRST CRACK</span>
+            </div>
+            <h3 class="text-3xl font-extrabold mb-3 text-white group-hover:text-amber-400 transition">RÖSTWERK</h3>
+            <p class="text-stone-400 text-sm leading-relaxed mb-6">
+              Single-origin Ethiopia Yirgacheffe roastery physics. Scroll to simulate the cellular crack expansion, volcanic oils release, and 9-bar nitro extraction.
+            </p>
+            <div class="space-y-2 mb-8 text-xs font-mono text-stone-300">
+              <div class="flex items-center gap-2"><span class="text-amber-400">✓</span> 120-Step First-Crack Kinetics</div>
+              <div class="flex items-center gap-2"><span class="text-amber-400">✓</span> Voice Concierge Ambient Narration</div>
+              <div class="flex items-center gap-2"><span class="text-amber-400">✓</span> Torched Demerara Product Lineup</div>
+            </div>
+          </div>
+          <div class="pt-6 border-t border-white/10 flex items-center justify-between">
+            <div>
+              <div class="text-[10px] font-mono text-stone-500 uppercase">Live Route</div>
+              <div class="text-xs font-mono text-amber-400">/coffee</div>
+            </div>
+            <a href="/coffee" class="px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-500 text-black hover:bg-amber-400 transition flex items-center gap-1.5 shadow-lg shadow-amber-500/20">
+              <span>Launch Demo</span>
+              <span>→</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- DEMO 2: BURGER -->
+        <div class="glass-card rounded-3xl p-8 flex flex-col justify-between relative overflow-hidden group border border-orange-500/20">
+          <div class="absolute -top-24 -right-24 w-56 h-56 bg-orange-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-orange-500/20 transition duration-500"></div>
+          <div>
+            <div class="flex items-center justify-between mb-6">
+              <span class="text-xs font-mono px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/30 text-orange-400">NICHE: ARTISANAL BURGER</span>
+              <span class="text-xs font-mono text-stone-400">230°C CAST IRON</span>
+            </div>
+            <h3 class="text-3xl font-extrabold mb-3 text-white group-hover:text-orange-400 transition">SMASH // LAB</h3>
+            <p class="text-stone-400 text-sm leading-relaxed mb-6">
+              100% Wagyu brisket sear scrollytelling. Experience the Maillard reaction locked in 60 seconds, layered brioche anatomy, and aged cheddar aioli.
+            </p>
+            <div class="space-y-2 mb-8 text-xs font-mono text-stone-300">
+              <div class="flex items-center gap-2"><span class="text-orange-400">✓</span> 230°C Sizzling Sear Particle Flare</div>
+              <div class="flex items-center gap-2"><span class="text-orange-400">✓</span> Voice AI Patty Weight Concierge</div>
+              <div class="flex items-center gap-2"><span class="text-orange-400">✓</span> Bone Marrow Jus & Truffle Glaze</div>
+            </div>
+          </div>
+          <div class="pt-6 border-t border-white/10 flex items-center justify-between">
+            <div>
+              <div class="text-[10px] font-mono text-stone-500 uppercase">Live Route</div>
+              <div class="text-xs font-mono text-orange-400">/burger</div>
+            </div>
+            <a href="/burger" class="px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider bg-orange-500 text-black hover:bg-orange-400 transition flex items-center gap-1.5 shadow-lg shadow-orange-500/20">
+              <span>Launch Demo</span>
+              <span>→</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- DEMO 3: CAMERA -->
+        <div class="glass-card rounded-3xl p-8 flex flex-col justify-between relative overflow-hidden group border border-cyan-500/20">
+          <div class="absolute -top-24 -right-24 w-56 h-56 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-cyan-500/20 transition duration-500"></div>
+          <div>
+            <div class="flex items-center justify-between mb-6">
+              <span class="text-xs font-mono px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400">NICHE: TECH OPTICS</span>
+              <span class="text-xs font-mono text-stone-400">61MP FULL-FRAME</span>
+            </div>
+            <h3 class="text-3xl font-extrabold mb-3 text-white group-hover:text-cyan-400 transition">LUCID ONE</h3>
+            <p class="text-stone-400 text-sm leading-relaxed mb-6">
+              Exploded optical core disassembly. Scroll to separate nano-coated aspherical glass elements, aperture diaphragm blades, and 5-axis IBIS sensor chassis.
+            </p>
+            <div class="space-y-2 mb-8 text-xs font-mono text-stone-300">
+              <div class="flex items-center gap-2"><span class="text-cyan-400">✓</span> Sub-Micron Precision Lens Stack</div>
+              <div class="flex items-center gap-2"><span class="text-cyan-400">✓</span> Voice AI Audio Spec Inspector</div>
+              <div class="flex items-center gap-2"><span class="text-cyan-400">✓</span> Milled Magnesium Aerospace Body</div>
+            </div>
+          </div>
+          <div class="pt-6 border-t border-white/10 flex items-center justify-between">
+            <div>
+              <div class="text-[10px] font-mono text-stone-500 uppercase">Live Route</div>
+              <div class="text-xs font-mono text-cyan-400">/camera</div>
+            </div>
+            <a href="/camera" class="px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider bg-cyan-400 text-black hover:bg-cyan-300 transition flex items-center gap-1.5 shadow-lg shadow-cyan-400/20">
+              <span>Launch Demo</span>
+              <span>→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Studio In-Page Simulator Section -->
+    <section id="live-preview" class="pt-20 pb-16">
+      <div class="glass rounded-3xl p-6 sm:p-10 border border-white/10">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <div>
+            <div class="text-xs font-mono text-stone-400 uppercase">// 02. IN-PAGE STUDIO SIMULATOR</div>
+            <h3 class="text-2xl sm:text-3xl font-extrabold mt-1">INTERACTIVE LIVE VIEWPORT</h3>
+          </div>
+          <!-- Viewport Tab Switcher -->
+          <div class="flex items-center gap-2 p-1.5 rounded-2xl bg-black/50 border border-white/10 text-xs font-mono">
+            <button onclick="switchPreview('/coffee', 'amber', this)" class="preview-btn px-4 py-2 rounded-xl transition bg-white/15 text-white font-bold">☕ Coffee</button>
+            <button onclick="switchPreview('/burger', 'orange', this)" class="preview-btn px-4 py-2 rounded-xl transition text-stone-400 hover:text-white">🍔 Burger</button>
+            <button onclick="switchPreview('/camera', 'cyan', this)" class="preview-btn px-4 py-2 rounded-xl transition text-stone-400 hover:text-white">📸 Camera</button>
+          </div>
+        </div>
+
+        <!-- Simulated Device Frame -->
+        <div class="relative w-full rounded-2xl overflow-hidden border border-white/15 shadow-2xl bg-black" style="height: 650px;">
+          <div class="absolute top-0 left-0 w-full h-10 bg-stone-900/90 backdrop-blur-md border-b border-white/10 px-4 flex items-center justify-between z-20">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+              <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
+              <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
+            </div>
+            <div id="sim-url" class="text-xs font-mono text-stone-400 px-4 py-1 rounded bg-black/60 border border-white/5 truncate max-w-sm">
+              https://premium-3d-websites-engine.vercel.app/coffee
+            </div>
+            <a id="sim-open" href="/coffee" target="_blank" class="text-xs font-mono text-stone-300 hover:text-white flex items-center gap-1">
+              <span>Open Tab</span> ↗
+            </a>
+          </div>
+          <iframe id="preview-frame" src="/coffee" class="w-full h-full pt-10 border-0" title="3D Scrollytelling Demo Viewport"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLI Forge Engine Section -->
+    <section id="cli" class="pt-20 pb-16">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <p class="text-xs font-mono tracking-[0.3em] uppercase text-cyan-400 mb-2">// 03. DEVELOPER TOOLING</p>
+          <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-6">FORGE CUSTOM 3D SITES IN SECONDS</h2>
+          <p class="text-stone-400 text-base leading-relaxed mb-6">
+            The bundled <code class="text-cyan-400 bg-white/5 px-2 py-0.5 rounded">3d-forge.sh</code> shell engine automates video frame slicing via FFmpeg (Lanczos 24fps) or generates procedural WebGL particle simulations with zero dependencies.
+          </p>
+          
+          <div class="space-y-4 text-sm font-mono text-stone-300">
+            <div class="flex items-start gap-3">
+              <span class="text-cyan-400 font-bold">01.</span>
+              <span>Extracts 120 high-fidelity WebP frames with optimal compression</span>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="text-cyan-400 font-bold">02.</span>
+              <span>Generates complete Tailwind + GSAP ScrollTrigger canvas scaffold</span>
+            </div>
+            <div class="flex items-start gap-3">
+              <span class="text-cyan-400 font-bold">03.</span>
+              <span>Injects AI Concierge speech synthesis and spatial layout</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Terminal Card -->
+        <div class="glass rounded-3xl p-6 border border-white/10 shadow-2xl">
+          <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-stone-700"></span>
+              <span class="w-3 h-3 rounded-full bg-stone-700"></span>
+              <span class="w-3 h-3 rounded-full bg-stone-700"></span>
+              <span class="text-xs font-mono text-stone-400 ml-2">bash terminal — 3d-forge.sh</span>
+            </div>
+            <button onclick="copyCommand()" id="copy-btn" class="text-xs font-mono px-3 py-1 rounded bg-white/10 hover:bg-white/20 text-stone-200 transition">
+              Copy Command
+            </button>
+          </div>
+          <pre class="text-xs font-mono text-stone-300 leading-relaxed overflow-x-auto p-2" id="cmd-text"><span class="text-stone-500"># 1. Clone & Enter Repository</span>
+git clone https://github.com/knightriderisback/premium-3d-websites-engine.git
+cd premium-3d-websites-engine
+
+<span class="text-stone-500"># 2. Forge Custom 3D Experiences (Procedural or Video)</span>
+./3d-forge.sh coffee [video.mp4]    <span class="text-stone-500"># Generates ./dist-coffee</span>
+./3d-forge.sh burger [video.mp4]    <span class="text-stone-500"># Generates ./dist-burger</span>
+./3d-forge.sh camera [video.mp4]    <span class="text-stone-500"># Generates ./dist-camera</span>
+
+<span class="text-stone-500"># 3. Instant Vercel Edge Deployment</span>
+vercel --prod</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Specs & Features Grid -->
+    <section id="specs" class="pt-20 pb-24 border-t border-white/10">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <p class="text-xs font-mono tracking-[0.3em] uppercase text-stone-500 mb-2">// 04. CORE CAPABILITIES</p>
+        <h2 class="text-4xl font-extrabold">ENGINEERED FOR SUPREME CRAFT</h2>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="glass p-8 rounded-3xl border border-white/5">
+          <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-xl mb-6">⚡</div>
+          <h3 class="text-xl font-bold mb-3">Sub-Millisecond Scrub</h3>
+          <p class="text-stone-400 text-sm leading-relaxed">
+            GSAP ScrollTrigger binding guarantees zero stutter during intense rapid scrolling. Canvas frame buffer swap operates inside a single animation frame tick.
+          </p>
+        </div>
+        <div class="glass p-8 rounded-3xl border border-white/5">
+          <div class="w-12 h-12 rounded-2xl bg-orange-500/10 border border-orange-500/30 flex items-center justify-center text-xl mb-6">🎙️</div>
+          <h3 class="text-xl font-bold mb-3">AI Voice Concierge</h3>
+          <p class="text-stone-400 text-sm leading-relaxed">
+            Built-in Web Speech API voice synthesis introduces products, announces roasting temperatures, and answers visitor inquiries with zero external API keys.
+          </p>
+        </div>
+        <div class="glass p-8 rounded-3xl border border-white/5">
+          <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-xl mb-6">🌐</div>
+          <h3 class="text-xl font-bold mb-3">Vercel Edge Global CDN</h3>
+          <p class="text-stone-400 text-sm leading-relaxed">
+            Configured with clean rewrites, instant HTTP/3 edge caching, and zero build compilation overhead. Deploys worldwide in under 10 seconds.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Luxury Footer -->
+  <footer class="content-layer py-12 px-6 border-t border-white/10 glass bg-black/90">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-3">
+        <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-500 via-orange-500 to-cyan-500 p-[1px]">
+          <div class="w-full h-full bg-black rounded-lg flex items-center justify-center text-[10px] font-black">3D</div>
+        </div>
+        <span class="font-display font-extrabold text-sm tracking-wider">PREMIUM 3D WEBSITES ENGINE</span>
+      </div>
+
+      <div class="flex items-center gap-6 text-xs font-mono text-stone-400">
+        <a href="/coffee" class="hover:text-amber-400 transition">Coffee Demo</a>
+        <a href="/burger" class="hover:text-orange-400 transition">Burger Demo</a>
+        <a href="/camera" class="hover:text-cyan-400 transition">Camera Demo</a>
+        <a href="https://github.com/knightriderisback/premium-3d-websites-engine" target="_blank" class="hover:text-white transition">GitHub Repo</a>
+      </div>
+
+      <div class="text-xs font-mono text-stone-500">
+        Built by <a href="https://github.com/knightriderisback" target="_blank" class="text-stone-300 hover:text-white transition">Hemant Engole</a> • Open Source MIT
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script for Canvas Background & Interactive Simulator -->
+  <script>
+    // Hero Canvas Kinetic Orbit
+    const canvas = document.getElementById('hero-canvas');
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    const particles = Array.from({ length: 90 }, (_, i) => ({
+      angle: (i / 90) * Math.PI * 2,
+      radius: 80 + Math.random() * 380,
+      speed: 0.002 + Math.random() * 0.005,
+      size: 1 + Math.random() * 3,
+      yOffset: (Math.random() - 0.5) * 160,
+      color: i % 3 === 0 ? '#d97706' : (i % 3 === 1 ? '#ff5500' : '#00e5ff')
+    }));
+
+    let mouseX = width / 2, mouseY = height / 2;
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    function drawHeroBackground() {
+      ctx.clearRect(0, 0, width, height);
+      const cx = width / 2 + (mouseX - width / 2) * 0.05;
+      const cy = height / 2 + (mouseY - height / 2) * 0.05;
+
+      // Subtle ambient core glow
+      const grad = ctx.createRadialGradient(cx, cy, 10, cx, cy, 450);
+      grad.addColorStop(0, 'rgba(217, 119, 6, 0.08)');
+      grad.addColorStop(0.5, 'rgba(255, 85, 0, 0.04)');
+      grad.addColorStop(1, 'transparent');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 450, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Orbital kinetic particles
+      particles.forEach(p => {
+        p.angle += p.speed;
+        const x = cx + Math.cos(p.angle) * p.radius;
+        const y = cy + Math.sin(p.angle) * (p.radius * 0.45) + p.yOffset;
+
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = 0.4;
+        ctx.beginPath();
+        ctx.arc(x, y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      requestAnimationFrame(drawHeroBackground);
+    }
+    drawHeroBackground();
+
+    // Studio Preview Switcher
+    function switchPreview(url, theme, btn) {
+      const frame = document.getElementById('preview-frame');
+      const simUrl = document.getElementById('sim-url');
+      const simOpen = document.getElementById('sim-open');
+      
+      frame.src = url;
+      simUrl.textContent = window.location.origin + url;
+      simOpen.href = url;
+
+      document.querySelectorAll('.preview-btn').forEach(b => {
+        b.className = 'preview-btn px-4 py-2 rounded-xl transition text-stone-400 hover:text-white';
+      });
+      btn.className = 'preview-btn px-4 py-2 rounded-xl transition bg-white/15 text-white font-bold';
+    }
+
+    // Copy to clipboard helper
+    function copyCommand() {
+      const text = document.getElementById('cmd-text').innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('copy-btn');
+        btn.textContent = '✓ Copied!';
+        setTimeout(() => { btn.textContent = 'Copy Command'; }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>

@@ -109,12 +109,12 @@
     const canvas = document.getElementById('webgl-canvas');
     const ctx = canvas.getContext('2d');
     const tempReadout = document.getElementById('temp-readout');
-    const FRAME_COUNT = 72;
+    const FRAME_COUNT = 171;
 
-    let width = canvas.width = window.innerWidth;
-    let height = canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-    // Frame preloader with absolute path & relative fallback
+    // Frame URLs with absolute path & fallback
     function getFrameUrl(num) {
       const pad = String(num).padStart(4, '0');
       return `/coffee/frames/frame_${pad}.webp`;
@@ -127,6 +127,32 @@
     const images = [];
     const frameState = { frame: 1 };
 
+    // Dynamic cover fit renderer
+    function renderFrame(frameIndex) {
+      const idx = Math.min(FRAME_COUNT, Math.max(1, Math.round(frameIndex))) - 1;
+      const img = images[idx];
+      if (img && img.complete && img.naturalWidth > 0) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const hRatio = canvas.width / img.width;
+        const vRatio = canvas.height / img.height;
+        const ratio = Math.max(hRatio, vRatio);
+        const centerShift_x = (canvas.width - img.width * ratio) / 2;
+        const centerShift_y = (canvas.height - img.height * ratio) / 2;
+        ctx.drawImage(
+          img,
+          0,
+          0,
+          img.width,
+          img.height,
+          centerShift_x,
+          centerShift_y,
+          img.width * ratio,
+          img.height * ratio
+        );
+      }
+    }
+
+    // Preloader with zero black screen: immediately draws frame_0001.webp on load
     for (let i = 1; i <= FRAME_COUNT; i++) {
       const img = new Image();
       img.src = getFrameUrl(i);
@@ -145,39 +171,13 @@
       images.push(img);
     }
 
-    // Canvas Draw with 3:4 portrait ratio cover & centering
-    function renderFrame(frameIndex) {
-      const img = images[frameIndex - 1];
-      if (!img || !img.complete || img.naturalWidth === 0) return;
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      const hRatio = canvas.width / img.width;
-      const vRatio = canvas.height / img.height;
-      const ratio = Math.max(hRatio, vRatio);
-      const centerShift_x = (canvas.width - img.width * ratio) / 2;
-      const centerShift_y = (canvas.height - img.height * ratio) / 2;
-
-      ctx.drawImage(
-        img,
-        0,
-        0,
-        img.width,
-        img.height,
-        centerShift_x,
-        centerShift_y,
-        img.width * ratio,
-        img.height * ratio
-      );
-    }
-
     window.addEventListener('resize', () => {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
-      renderFrame(Math.min(FRAME_COUNT, Math.max(1, Math.round(frameState.frame))));
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      renderFrame(frameState.frame);
     });
 
-    // GSAP ScrollTrigger hardware-accelerated scrub
+    // GSAP ScrollTrigger scrub
     gsap.to(frameState, {
       frame: FRAME_COUNT,
       snap: 'frame',
@@ -190,13 +190,12 @@
         onUpdate: (self) => {
           const p = self.progress;
           tempReadout.textContent = `${Math.round(24 + p * 190)}°C // ${p < 0.25 ? 'GREEN BEAN' : p < 0.7 ? 'FIRST CRACK 214°C' : 'DARK ROAST READY'}`;
-          const targetFrame = Math.min(FRAME_COUNT, Math.max(1, Math.round(frameState.frame)));
-          renderFrame(targetFrame);
+          renderFrame(frameState.frame);
         }
       }
     });
 
-    // Initial render attempt
+    // Try initial draw
     renderFrame(1);
 
     function speakText(t) {
