@@ -1,0 +1,21 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/coffee", "destination": "/dist-coffee/index.html" },
+    { "source": "/burger", "destination": "/dist-burger/index.html" },
+    { "source": "/camera", "destination": "/dist-camera/index.html" },
+    { "source": "/dist-coffee", "destination": "/dist-coffee/index.html" },
+    { "source": "/dist-burger", "destination": "/dist-burger/index.html" },
+    { "source": "/dist-camera", "destination": "/dist-camera/index.html" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" }
+      ]
+    }
+  ]
+}

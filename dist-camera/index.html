@@ -20,13 +20,24 @@
 <body>
   <canvas id="webgl-canvas"></canvas>
   <header class="fixed top-0 left-0 w-full z-50 px-6 py-4 flex justify-between items-center glass">
-    <div class="flex items-center gap-3">
-      <span class="w-2.5 h-2.5 rounded-full animate-ping" style="background: var(--accent)"></span>
-      <span class="font-display font-extrabold tracking-widest text-lg">LUCID ONE</span>
+    <div class="flex items-center gap-4">
+      <a href="/" class="text-xs font-mono text-stone-300 hover:text-white transition flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/10 hover:border-white/25 bg-white/5">
+        <span>←</span> Hub
+      </a>
+      <div class="flex items-center gap-3">
+        <span class="w-2.5 h-2.5 rounded-full animate-ping" style="background: var(--accent)"></span>
+        <span class="font-display font-extrabold tracking-widest text-lg">LUCID ONE</span>
+      </div>
+    </div>
+    <div class="hidden md:flex items-center gap-3 text-xs font-mono text-stone-400">
+      <span class="text-stone-500">EXPERIENCE:</span>
+      <a href="/coffee" class="px-2.5 py-1 rounded transition hover:text-white ">COFFEE</a>
+      <a href="/burger" class="px-2.5 py-1 rounded transition hover:text-white ">BURGER</a>
+      <a href="/camera" class="px-2.5 py-1 rounded transition hover:text-white bg-white/10 text-white border border-white/20">CAMERA</a>
     </div>
     <div class="flex items-center gap-3">
       <span id="temp-readout" class="text-xs font-mono px-2.5 py-1 rounded bg-white/5 border border-white/10" style="color: var(--accent)">024°C // IDLE</span>
-      <button onclick="speakText('Welcome to LUCID ONE. Scroll to inspect our 3D process or select an item below.')" class="px-4 py-2 rounded-full text-xs font-bold uppercase text-black" style="background: var(--accent)">🎙️ AI Concierge</button>
+      <button onclick="speakText('Welcome to LUCID ONE. Scroll to inspect our 3D process or select an item below.')" class="px-4 py-2 rounded-full text-xs font-bold uppercase text-black hover:opacity-90 transition flex items-center gap-1" style="background: var(--accent)">🎙️ AI Concierge</button>
     </div>
   </header>
 
@@ -35,6 +46,9 @@
       <p class="text-xs font-mono tracking-[0.3em] uppercase mb-4 px-3 py-1 rounded-full glass" style="color: var(--accent)">// 01. PRECISION OPTICS — F/1.2</p>
       <h1 class="text-5xl md:text-8xl font-extrabold max-w-5xl leading-none mb-6">BUILT TO CAPTURE LIGHT</h1>
       <p class="text-stone-400 max-w-xl text-base md:text-lg">Scroll to disassemble the 61MP Full-Frame Optical Core.</p>
+      <div class="mt-8 flex items-center gap-2 text-stone-500 text-xs font-mono animate-bounce">
+        <span>↓</span> SCROLL TO ACTIVATE 3D PHYSICS
+      </div>
     </section>
     <section class="h-screen flex items-center px-6 md:px-20">
       <div class="glass p-8 rounded-2xl max-w-lg">
@@ -55,16 +69,16 @@
         <div class="text-xs font-mono mb-2" style="color: var(--accent)">// 04. AEROSPACE CHASSIS</div>
         <h2 class="text-4xl md:text-6xl font-extrabold mb-4">MILLED MAGNESIUM ALLOY</h2>
         <p class="text-stone-300 mb-6">Weather-sealed body with tactile dials and instant wireless RAW transfer.</p>
-        <a href="#lineup" class="inline-block px-8 py-4 rounded-full font-bold text-black uppercase text-xs" style="background: var(--accent)">Explore Menu ↓</a>
+        <a href="#lineup" class="inline-block px-8 py-4 rounded-full font-bold text-black uppercase text-xs hover:opacity-90 transition" style="background: var(--accent)">Explore Lineup ↓</a>
       </div>
     </section>
   </main>
 
   <section id="lineup" class="content-layer py-24 px-6 md:px-20 bg-black/85 backdrop-blur-xl border-t border-white/10">
     <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-6">
-      <div class="glass rounded-2xl p-6"><div class="flex justify-between mb-3"><span class="text-xs font-mono text-stone-400">SIGNATURE</span><span class="font-bold" style="color:var(--accent)">,499</span></div><h3 class="text-xl font-bold mb-2">01 // LUCID ONE BODY</h3><p class="text-stone-400 text-xs mb-4">61MP Full-Frame • 8K 60fps RAW • 5-Axis IBIS</p></div>
-      <div class="glass rounded-2xl p-6"><div class="flex justify-between mb-3"><span class="text-xs font-mono text-stone-400">LIMITED</span><span class="font-bold" style="color:var(--accent)">camera,199</span></div><h3 class="text-xl font-bold mb-2">02 // 35MM F/1.2 PRIME</h3><p class="text-stone-400 text-xs mb-4">Nano AR Coating II • Linear XD Motors</p></div>
-      <div class="glass rounded-2xl p-6"><div class="flex justify-between mb-3"><span class="text-xs font-mono text-stone-400">CRAFT</span><span class="font-bold" style="color:var(--accent)">,899</span></div><h3 class="text-xl font-bold mb-2">03 // CINEMA RIG EDITION</h3><p class="text-stone-400 text-xs mb-4">Body + 35mm Prime + OLED Viewfinder + Cage</p></div>
+      <div class="glass rounded-2xl p-6 hover:border-white/20 transition"><div class="flex justify-between mb-3"><span class="text-xs font-mono text-stone-400">SIGNATURE</span><span class="font-bold" style="color:var(--accent)">$2,499</span></div><h3 class="text-xl font-bold mb-2">01 // LUCID ONE BODY</h3><p class="text-stone-400 text-xs mb-4">61MP Full-Frame • 8K 60fps RAW • 5-Axis IBIS</p></div>
+      <div class="glass rounded-2xl p-6 hover:border-white/20 transition"><div class="flex justify-between mb-3"><span class="text-xs font-mono text-stone-400">LIMITED</span><span class="font-bold" style="color:var(--accent)">$1,199</span></div><h3 class="text-xl font-bold mb-2">02 // 35MM F/1.2 PRIME</h3><p class="text-stone-400 text-xs mb-4">Nano AR Coating II • Linear XD Motors</p></div>
+      <div class="glass rounded-2xl p-6 hover:border-white/20 transition"><div class="flex justify-between mb-3"><span class="text-xs font-mono text-stone-400">CRAFT</span><span class="font-bold" style="color:var(--accent)">$3,899</span></div><h3 class="text-xl font-bold mb-2">03 // CINEMA RIG EDITION</h3><p class="text-stone-400 text-xs mb-4">Body + 35mm Prime + OLED Viewfinder + Cage</p></div>
     </div>
   </section>
 
@@ -73,31 +87,145 @@
     const canvas = document.getElementById('webgl-canvas'), ctx = canvas.getContext('2d');
     const tempReadout = document.getElementById('temp-readout');
     const ACCENT = "#00e5ff";
+    const CANVAS_MODE = "camera";
+    const HAS_FRAMES = false;
+    const FRAME_COUNT = 120;
+    
     let width = canvas.width = window.innerWidth, height = canvas.height = window.innerHeight;
     window.addEventListener('resize', () => { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; });
     const state = { progress: 0 };
-    const nodes = Array.from({ length: 130 }, (_, i) => ({
-      angle: (i / 130) * Math.PI * 24, radius: 15 + (i * 2.2), yOffset: (Math.random() - 0.5) * 300,
-      size: 3 + (i % 8), speed: 0.4 + Math.random() * 1.2, shade: i % 3 === 0 ? ACCENT : '#ffffff'
+    
+    // Procedural Particle & Geometry Engine
+    const nodes = Array.from({ length: 140 }, (_, i) => ({
+      angle: (i / 140) * Math.PI * 24,
+      radius: 18 + (i * 2.4),
+      yOffset: (Math.random() - 0.5) * 320,
+      size: 2.5 + (i % 7),
+      speed: 0.4 + Math.random() * 1.3,
+      shade: i % 3 === 0 ? ACCENT : (i % 2 === 0 ? '#ffffff' : '#888888'),
+      pulse: Math.random() * Math.PI * 2
     }));
-    function render() {
+
+    function renderProcedural(p) {
       ctx.clearRect(0, 0, width, height);
-      const p = state.progress, cx = width / 2, cy = height / 2, explosion = Math.sin(p * Math.PI);
-      tempReadout.textContent = `${Math.round(24 + p * 206)}°C // ${p < 0.25 ? 'IDLE' : p < 0.7 ? '3D EXPLODE' : 'READY'}`;
-      const grad = ctx.createRadialGradient(cx, cy, 10, cx, cy, 160 + explosion * 260);
-      grad.addColorStop(0, ACCENT + '55'); grad.addColorStop(1, 'transparent');
-      ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(cx, cy, 360, 0, Math.PI * 2); ctx.fill();
+      const cx = width / 2, cy = height / 2;
+      const explosion = Math.sin(p * Math.PI);
+
+      if (CANVAS_MODE === 'camera') {
+        tempReadout.textContent = `61MP // ${Math.round(24 + p * 36)}°C // ${p < 0.25 ? 'OPTICAL CORE' : p < 0.7 ? 'DISASSEMBLED' : 'LOCKED'}`;
+        
+        // Lens ring optical glow
+        const grad = ctx.createRadialGradient(cx, cy, 20, cx, cy, 200 + explosion * 300);
+        grad.addColorStop(0, ACCENT + '44');
+        grad.addColorStop(0.5, ACCENT + '11');
+        grad.addColorStop(1, 'transparent');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(cx, cy, 380, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Optical concentric rings
+        for (let r = 1; r <= 4; r++) {
+          ctx.strokeStyle = ACCENT + (r === 2 ? '88' : '33');
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.arc(cx, cy, (50 * r) + (explosion * 70 * r), 0, Math.PI * 2);
+          ctx.stroke();
+        }
+
+        // Aperture blades & sensor grid
+        ctx.strokeStyle = '#ffffff22';
+        ctx.beginPath();
+        const bSize = 60 + explosion * 120;
+        ctx.rect(cx - bSize, cy - bSize * 0.7, bSize * 2, bSize * 1.4);
+        ctx.stroke();
+
+      } else if (CANVAS_MODE === 'burger') {
+        tempReadout.textContent = `${Math.round(24 + p * 206)}°C // ${p < 0.25 ? 'CAST IRON COLD' : p < 0.7 ? 'MAILLARD SEAR' : 'SMASH ASSEMBLED'}`;
+        
+        // Sizzling fiery heat gradient
+        const grad = ctx.createRadialGradient(cx, cy, 10, cx, cy, 180 + explosion * 280);
+        grad.addColorStop(0, ACCENT + '66');
+        grad.addColorStop(0.4, '#ff110033');
+        grad.addColorStop(1, 'transparent');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(cx, cy, 400, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Searing cast-iron disk outline
+        ctx.strokeStyle = ACCENT + '77';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.ellipse(cx, cy + 40 * explosion, 140 + explosion * 110, 70 + explosion * 50, 0, 0, Math.PI * 2);
+        ctx.stroke();
+
+      } else {
+        // Coffee roaster first-crack physics
+        tempReadout.textContent = `${Math.round(24 + p * 190)}°C // ${p < 0.25 ? 'GREEN BEAN' : p < 0.7 ? 'FIRST CRACK 214°C' : 'DARK ROAST READY'}`;
+        
+        // Golden caramel heat gradient
+        const grad = ctx.createRadialGradient(cx, cy, 10, cx, cy, 170 + explosion * 260);
+        grad.addColorStop(0, ACCENT + '55');
+        grad.addColorStop(0.5, '#78350f22');
+        grad.addColorStop(1, 'transparent');
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(cx, cy, 380, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Bean orbital rings
+        ctx.strokeStyle = ACCENT + '44';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, 120 + explosion * 80, 60 + explosion * 40, p * Math.PI, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      // Orbital kinetic particles
       nodes.forEach(n => {
-        const a = n.angle + p * 6 * n.speed, spread = explosion * n.radius * 1.8;
-        const x = cx + Math.cos(a) * (25 + spread), y = cy + Math.sin(a) * (25 + spread * 0.65) + (n.yOffset * explosion);
-        ctx.save(); ctx.translate(x, y); ctx.rotate(a); ctx.fillStyle = n.shade; ctx.globalAlpha = 0.5;
-        ctx.beginPath(); ctx.ellipse(0, 0, n.size * 1.4, n.size * 0.8, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+        const a = n.angle + p * 6 * n.speed;
+        const spread = explosion * n.radius * 1.8;
+        const x = cx + Math.cos(a) * (30 + spread);
+        const y = cy + Math.sin(a) * (30 + spread * 0.65) + (n.yOffset * explosion);
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(a);
+        ctx.fillStyle = n.shade;
+        ctx.globalAlpha = 0.6 + 0.3 * Math.sin(p * 5 + n.pulse);
+        ctx.beginPath();
+        ctx.ellipse(0, 0, n.size * 1.4, n.size * 0.8, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
       });
+    }
+
+    function render() {
+      renderProcedural(state.progress);
       requestAnimationFrame(render);
     }
     render();
-    gsap.to(state, { progress: 1, ease: 'none', scrollTrigger: { trigger: '#scrolly', start: 'top top', end: 'bottom bottom', scrub: 0.6 } });
-    function speakText(t) { if ('speechSynthesis' in window) { window.speechSynthesis.cancel(); window.speechSynthesis.speak(new SpeechSynthesisUtterance(t)); } }
+
+    gsap.to(state, {
+      progress: 1,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '#scrolly',
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0.6
+      }
+    });
+
+    function speakText(t) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(t);
+        utterance.rate = 1.0;
+        utterance.pitch = 1.0;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
   </script>
 </body>
 </html>
